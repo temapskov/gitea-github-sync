@@ -35,7 +35,7 @@ def print_repositories(repos: List[repository.Repository], display_stats: bool) 
 @cli.command()
 def list_all_github_repositories(stats: bool) -> None:
     gh = github.get_github()
-    repos = github.list_all_repositories(gh)
+    repos = github.list_all_org_repositories('QCoreTech', gh)
     print_repositories(repos, stats)
 
 
@@ -78,3 +78,22 @@ def sync() -> None:
         print(f"Migrating [b]{repo.full_repo_name}[/]")
         gt.migrate_repo(repo=repo, github_token=conf.github_token)
     print(f"Migrated {len(repos_to_sync)} repos successfully")
+
+
+@cli.command()
+@click.argument("full_org_name")
+def sync_all_org_repositories(full_org_name: str) -> None:
+    conf = config.load_config()
+    gt = gitea.get_gitea()
+    gh = github.get_github()
+    github_repos = github.list_all_org_repositories(full_org_name, gh)
+    gitea_repos = gt.get_repos()
+    repos_to_sync = migration.list_missing_github_repos(
+        gh_repos=github_repos, gitea_repos=gitea_repos
+    )
+    print(f"Starting migration for {len(repos_to_sync)} repos")
+    for repo in repos_to_sync:
+        print(f"Migrating [b]{repo.full_repo_name}[/]")
+        gt.migrate_repo(repo=repo, github_token=conf.github_token)
+    print(f"Migrated {len(repos_to_sync)} repos successfully")
+

@@ -54,6 +54,7 @@ class Gitea:
             "auth_token": github_token,
             "clone_addr": f"https://github.com/{repo.full_repo_name}",
             "repo_name": repo.get_repo_name(),
+            "repo_owner": repo.get_org_name(),
             "service": "github",
             "mirror": True,
             "private": repo.visibility == Visibility.PRIVATE,

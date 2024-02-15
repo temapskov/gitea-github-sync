@@ -54,6 +54,8 @@ Both work with gitea-github-sync, but given that Gitea does not allow the modifi
 
 `gitea-github-sync sync` Migrates all repos not present in Gitea from Github
 
+`gitea-github-sync sync-all-org-repositories ORG_NAME` Migrates all repos not present in Gitea from Github org
+
 ## Automate gitea-github-sync execution
 
 There are multiple ways to automate the execution of gitea-github-sync. One of them is using cron:
